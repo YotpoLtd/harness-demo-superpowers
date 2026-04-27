@@ -21,8 +21,7 @@ function startServer(): void {
 }
 
 const isDirectRun =
-  process.argv[1] &&
-  import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"));
+  process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"));
 
 if (isDirectRun) {
   startServer();
