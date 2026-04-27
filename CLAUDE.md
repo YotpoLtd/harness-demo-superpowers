@@ -67,6 +67,7 @@ The Superpowers skill chain produces artifacts at each stage:
 3. **SDD** executes the plan task by task with the gen-eval loop
 4. **Finishing** handles git operations
 
+Spec template (OpenSpec-inspired): `specs/TEMPLATE.md`
 Pre-written specs for guided demo (shortcutting brainstorming): `specs/`
 
 ## ADRs
