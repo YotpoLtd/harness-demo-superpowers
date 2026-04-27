@@ -1,0 +1,30 @@
+{
+  "name": "harness-demo-superpowers",
+  "version": "1.0.0",
+  "description": "Harness Engineering demo using Claude Code + Superpowers skill chain",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:json": "vitest run --reporter=json --outputFile=reports/test-results.json",
+    "lint": "eslint src/ tests/ --format json --output-file reports/lint-errors.json",
+    "lint:fix": "eslint src/ tests/ --fix"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.3",
+    "eslint": "^9.25.1",
+    "@eslint/js": "^9.25.1",
+    "typescript-eslint": "^8.31.1",
+    "typescript": "^5.8.3",
+    "tsx": "^4.19.4",
+    "vitest": "^3.1.3",
+    "supertest": "^7.1.0",
+    "@types/supertest": "^6.0.2"
+  }
+}
