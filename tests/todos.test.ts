@@ -80,4 +80,58 @@ describe("DELETE /todos/:id", () => {
     expect(response.status).toBe(404);
     expect(response.body).toEqual({ error: "Todo not found" });
   });
+
+  it("removed todo does not appear in GET /todos", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Will be removed" })
+      .set("Content-Type", "application/json");
+
+    await supertest(app).delete(`/todos/${created.body.id}`);
+
+    const list = await supertest(app).get("/todos");
+
+    expect(list.status).toBe(200);
+    expect(list.body).toEqual([]);
+  });
+
+  it("returns 404 on second delete of same ID", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Delete twice" })
+      .set("Content-Type", "application/json");
+
+    await supertest(app).delete(`/todos/${created.body.id}`);
+    const second = await supertest(app).delete(`/todos/${created.body.id}`);
+
+    expect(second.status).toBe(404);
+    expect(second.body).toEqual({ error: "Todo not found" });
+  });
+
+  it("does not affect other todos", async () => {
+    const app = createApp();
+
+    const first = await supertest(app)
+      .post("/todos")
+      .send({ title: "Keep this" })
+      .set("Content-Type", "application/json");
+
+    const second = await supertest(app)
+      .post("/todos")
+      .send({ title: "Delete this" })
+      .set("Content-Type", "application/json");
+
+    await supertest(app).delete(`/todos/${second.body.id}`);
+
+    const list = await supertest(app).get("/todos");
+
+    expect(list.status).toBe(200);
+    expect(list.body).toHaveLength(1);
+    expect(list.body[0].id).toBe(first.body.id);
+    expect(list.body[0].title).toBe("Keep this");
+  });
 });
