@@ -1,5 +1,8 @@
 # Harness Demo — Superpowers Edition
 
+<!-- Badge works once a GitHub remote is configured -->
+![AI Harness Score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/YotpoLtd/harness-demo-superpowers/main/scorecard-badge.json)
+
 A minimal TypeScript API wrapped in a full harness built on **Superpowers skills + Claude Code hooks**. The app is intentionally trivial — the value is in the orchestration layer around it demonstrating every concept from Harness Engineering.
 
 **The app is not the point. The harness is the point.**
@@ -103,6 +106,20 @@ reports/
     ├── 2026-04-27T10-30-00-spec-review-task1.md
     └── ...
 ```
+
+## Scorecard
+
+The [AI Harness Scorecard](https://github.com/markmishaev76/ai-harness-scorecard) runs on every push to main via GitHub Actions. It grades the repo across 31 deterministic checks in 5 categories:
+
+| Category | Weight |
+|----------|--------|
+| Architectural Documentation | 20% |
+| Mechanical Constraints | 25% |
+| Testing & Stability | 25% |
+| Review & Drift Prevention | 15% |
+| AI-Specific Safeguards | 15% |
+
+Results are committed as `scorecard-badge.json` and `scorecard-report.md` at the repo root. See [ADR-004](docs/adrs/004-harness-scorecard.md) for the decision rationale.
 
 ## What This Proves
 

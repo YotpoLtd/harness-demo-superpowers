@@ -70,9 +70,15 @@ The Superpowers skill chain produces artifacts at each stage:
 Spec template (OpenSpec-inspired): `specs/TEMPLATE.md`
 Pre-written specs for guided demo (shortcutting brainstorming): `specs/`
 
+## Scorecard
+
+The AI Harness Scorecard runs via GitHub Actions on every push to main (`.github/workflows/scorecard.yml`).
+It grades the repo on 31 deterministic checks — no LLM dependency. See ADR-004 for details.
+
 ## ADRs
 
 Architecture Decision Records in `docs/adrs/`. Read these before proposing changes to:
 - Storage mechanism (ADR-001)
 - Framework choice (ADR-002)
 - Testing/reporting approach (ADR-003)
+- Harness scorecard (ADR-004)
