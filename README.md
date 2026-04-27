@@ -1,7 +1,8 @@
 # Harness Demo — Superpowers Edition
 
-<!-- Badge works once a GitHub remote is configured -->
+<!-- Badge: uncomment when repo is public (Shields.io can't access private raw files)
 ![AI Harness Score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/YotpoLtd/harness-demo-superpowers/main/scorecard-badge.json)
+-->
 
 A minimal TypeScript API wrapped in a full harness built on **Superpowers skills + Claude Code hooks**. The app is intentionally trivial — the value is in the orchestration layer around it demonstrating every concept from Harness Engineering.
 
