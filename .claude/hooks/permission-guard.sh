@@ -1,7 +1,8 @@
 #!/bin/bash
 # PreToolUse hook for Bash — blocks dangerous commands
 
-INPUT="${CLAUDE_TOOL_USE_INPUT:-}"
+HOOK_DATA=$(cat)
+INPUT=$(echo "$HOOK_DATA" | jq -r '.tool_input // empty')
 
 DANGEROUS_PATTERNS=(
   "--force"
@@ -17,7 +18,7 @@ for pattern in "${DANGEROUS_PATTERNS[@]}"; do
     echo "BLOCKED: Command contains dangerous flag: $pattern"
     echo "Reason: This harness prohibits destructive operations."
     echo "Alternative: Use safe equivalents (e.g., git push without --force)."
-    exit 1
+    exit 2
   fi
 done
 

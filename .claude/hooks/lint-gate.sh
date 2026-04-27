@@ -15,7 +15,7 @@ if [ $ESLINT_EXIT -ne 0 ]; then
   echo "Errors written to $REPORT_DIR/lint-errors.json"
   echo "Read the JSON file to find exact file, line, and rule for each error."
   cat "$REPORT_DIR/lint-errors.json"
-  exit 1
+  exit 2
 fi
 
 exit 0

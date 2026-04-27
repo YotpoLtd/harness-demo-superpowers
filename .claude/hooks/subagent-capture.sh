@@ -7,7 +7,8 @@ cd "$(git rev-parse --show-toplevel)" || exit 0
 REPORT_DIR="reports/reviews"
 mkdir -p "$REPORT_DIR"
 
-TOOL_NAME="${CLAUDE_TOOL_USE_NAME:-}"
+HOOK_DATA=$(cat)
+TOOL_NAME=$(echo "$HOOK_DATA" | jq -r '.tool_name // empty')
 if [ "$TOOL_NAME" != "Agent" ]; then
   exit 0
 fi
@@ -15,20 +16,13 @@ fi
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S")
 SAFE_TIMESTAMP=$(echo "$TIMESTAMP" | tr ':' '-')
 
-DESCRIPTION=$(echo "${CLAUDE_TOOL_USE_INPUT:-}" | python3 -c "
-import sys, json
-try:
-    data = json.load(sys.stdin)
-    print(data.get('description', 'unknown'))
-except:
-    print('unknown')
-" 2>/dev/null || echo "unknown")
-
+DESCRIPTION=$(echo "$HOOK_DATA" | jq -r '.tool_input.description // "unknown"')
 SAFE_DESC=$(echo "$DESCRIPTION" | tr ' /' '-' | tr -cd '[:alnum:]-' | head -c 50)
 
 FILENAME="${SAFE_TIMESTAMP}-${SAFE_DESC}.md"
 
-OUTPUT="${CLAUDE_TOOL_USE_OUTPUT:-No output captured}"
+INPUT_TEXT=$(echo "$HOOK_DATA" | jq -r '.tool_input // empty' | head -c 2000)
+OUTPUT=$(echo "$HOOK_DATA" | jq -r '.tool_output // "No output captured"')
 
 cat > "$REPORT_DIR/$FILENAME" << REPORT_EOF
 # Subagent Report: $DESCRIPTION
@@ -39,7 +33,7 @@ cat > "$REPORT_DIR/$FILENAME" << REPORT_EOF
 ## Input
 
 \`\`\`
-$(echo "${CLAUDE_TOOL_USE_INPUT:-}" | head -c 2000)
+$INPUT_TEXT
 \`\`\`
 
 ## Output
