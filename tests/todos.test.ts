@@ -56,3 +56,28 @@ describe("POST then GET", () => {
     expect(response.body[0].title).toBe("Buy milk");
   });
 });
+
+describe("DELETE /todos/:id", () => {
+  it("returns 204 and empty body for existing todo", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "To be deleted" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app).delete(`/todos/${created.body.id}`);
+
+    expect(response.status).toBe(204);
+    expect(response.body).toEqual({});
+  });
+
+  it("returns 404 with error message for non-existent todo", async () => {
+    const app = createApp();
+
+    const response = await supertest(app).delete("/todos/non-existent-id");
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "Todo not found" });
+  });
+});

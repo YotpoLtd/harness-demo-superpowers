@@ -31,5 +31,18 @@ export function createTodoRouter(): {
     res.status(201).json(todo);
   });
 
+  router.delete("/:id", (req, res): void => {
+    const { id } = req.params;
+    const existing = todos.find((todo) => todo.id === id);
+
+    if (!existing) {
+      res.status(404).json({ error: "Todo not found" });
+      return;
+    }
+
+    todos = todos.filter((todo) => todo.id !== id);
+    res.status(204).send();
+  });
+
   return { router, getTodos: () => todos };
 }
