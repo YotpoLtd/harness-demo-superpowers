@@ -18,6 +18,9 @@ export default tseslint.config(
       ],
       "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/no-explicit-any": "error",
+      "no-throw-literal": "error",
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/strict-boolean-expressions": "warn",
     },
   },
   {
