@@ -77,7 +77,7 @@ It grades the repo on 31 deterministic checks — no LLM dependency. See ADR-004
 
 ## ADRs
 
-Architecture Decision Records in `docs/adrs/`. Read these before proposing changes to:
+Architecture Decision Records in `docs/adr/`. Read these before proposing changes to:
 - Storage mechanism (ADR-001)
 - Framework choice (ADR-002)
 - Testing/reporting approach (ADR-003)

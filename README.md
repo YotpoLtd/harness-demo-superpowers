@@ -74,7 +74,7 @@ This enters the full pipeline:
 | `ARCHITECTURE.md` | Module boundaries, data flow, dependency rules |
 | `PROGRESS.md` | Agent session handoff file |
 | `.claude/rules/` | Scoped coding standards (common + TypeScript) |
-| `docs/adrs/` | Architecture Decision Records (why, not what) |
+| `docs/adr/` | Architecture Decision Records (why, not what) |
 
 ### The Gen-Eval Loop
 
@@ -118,7 +118,7 @@ The [AI Harness Scorecard](https://github.com/markmishaev76/ai-harness-scorecard
 | Review & Drift Prevention | 15% |
 | AI-Specific Safeguards | 15% |
 
-Results are committed as `scorecard-badge.json` and `scorecard-report.md` at the repo root. See [ADR-004](docs/adrs/004-harness-scorecard.md) for the decision rationale.
+Results are committed as `scorecard-badge.json` and `scorecard-report.md` at the repo root. See [ADR-004](docs/adr/004-harness-scorecard.md) for the decision rationale.
 
 ## What This Proves
 
