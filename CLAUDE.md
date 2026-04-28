@@ -70,6 +70,17 @@ The Superpowers skill chain produces artifacts at each stage:
 Spec template (OpenSpec-inspired): `specs/TEMPLATE.md`
 Pre-written specs for guided demo (shortcutting brainstorming): `specs/`
 
+## CI
+
+GitHub Actions workflow (`.github/workflows/ci.yml`) enforces on every push and PR:
+- ESLint (same rules as lint-gate hook)
+- Prettier format check
+- Vitest with coverage
+- npm audit
+- commitlint (conventional commits)
+
+CI is the second enforcement gate — hooks catch issues during agent work, CI catches everything else.
+
 ## Scorecard
 
 The AI Harness Scorecard runs via GitHub Actions on every push to main (`.github/workflows/scorecard.yml`).

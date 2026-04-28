@@ -66,6 +66,17 @@ This enters the full pipeline:
 | `test-gate.sh` | Stop | Vitest -> JSON, blocks on failures |
 | `report.sh` | Stop | Generates `reports/session-report.md` |
 
+### CI Enforcement (GitHub Actions)
+
+| Job | What It Checks | Scorecard Category |
+|-----|---------------|-------------------|
+| `lint` | ESLint strict TypeScript rules | Mechanical Constraints |
+| `format` | Prettier formatting consistency | Mechanical Constraints |
+| `test` | Vitest with coverage reporting | Testing & Stability |
+| `audit` | npm dependency vulnerabilities | Mechanical Constraints |
+| `commitlint` | Conventional commit messages | Mechanical Constraints |
+| `pr-size` | PR diff size labeling | AI-Specific Safeguards |
+
 ### Context Engineering
 
 | File | Purpose |
