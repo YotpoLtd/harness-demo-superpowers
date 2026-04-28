@@ -21,6 +21,16 @@ src/
 - `types.ts` has ZERO dependencies — pure type definitions
 - No circular dependencies between any modules
 
+### Forbidden Dependencies
+
+These constraints define what must NOT happen — violations break module isolation:
+
+- `types.ts` MUST NOT import any other module (it is a leaf dependency)
+- `routes/todos.ts` MUST NOT import `index.ts` (routes must not depend on the app bootstrap)
+- No module in `src/` MUST NOT import from `tests/` (production code never depends on test code)
+- No module MUST NOT import directly from `node_modules` paths — use package names only
+- `index.ts` MUST NOT contain business logic — it is purely app assembly and server bootstrap
+
 ### Data Flow
 
 ```
