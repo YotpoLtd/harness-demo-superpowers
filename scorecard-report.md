@@ -1,23 +1,23 @@
 # AI Harness Scorecard: harness-demo-superpowers
 
-**Grade: F** (25.3/100) | No meaningful harness. AI output is essentially unaudited.
+**Grade: B** (74.6/100) | Good foundation. Some gaps in enforcement or feedback loops.
 
 - **Repository**: `/home/runner/work/harness-demo-superpowers/harness-demo-superpowers`
 - **Languages**: javascript, typescript
-- **Assessed**: 2026-04-27 20:17 UTC
-- **Checks**: 7/31 passed
+- **Assessed**: 2026-04-28 05:46 UTC
+- **Checks**: 22/31 passed
 
 ## Summary
 
 | Category | Weight | Score | Checks |
 |----------|--------|-------|--------|
-| Architectural Documentation | 20% | 50% [#####-----] | 2/5 |
-| Mechanical Constraints | 25% | 27% [###-------] | 2/7 |
-| Testing & Stability | 25% | 6% [#---------] | 1/8 |
-| Review & Drift Prevention | 15% | 20% [##--------] | 1/6 |
-| AI-Specific Safeguards | 15% | 27% [###-------] | 1/5 |
+| Architectural Documentation | 20% | 85% [########--] | 4/5 |
+| Mechanical Constraints | 25% | 86% [#########-] | 6/7 |
+| Testing & Stability | 25% | 48% [#####-----] | 4/8 |
+| Review & Drift Prevention | 15% | 60% [######----] | 3/6 |
+| AI-Specific Safeguards | 15% | 100% [##########] | 5/5 |
 
-## Architectural Documentation (50%)
+## Architectural Documentation (85%)
 
 ### [PASS] Architecture Documentation (5/5)
 
@@ -31,21 +31,17 @@ _OpenAI Harness Engineering (2026)_
 
 **Evidence**: Found: CLAUDE.md
 
-### [FAIL] Architecture Decision Records (0/3)
+### [PASS] Architecture Decision Records (3/3)
 
 _DORA 2025 Report - AI-accessible documentation_
 
-**Evidence**: No Architecture Decision Records found
+**Evidence**: Found ADR directory: docs/adr
 
-**Remediation**: Create docs/adr/ directory with numbered markdown decision records. Use adr-tools or a simple template.
-
-### [FAIL] Module Boundary Documentation (0/4)
+### [PASS] Module Boundary Documentation (4/4)
 
 _matklad ARCHITECTURE.md - constraints as absences_
 
-**Evidence**: No module boundary constraints documented
-
-**Remediation**: Document which modules must NOT depend on each other in ARCHITECTURE.md. Example: 'The fields crate never depends on any other workspace crate.'
+**Evidence**: Module boundary constraints found in ARCHITECTURE.md
 
 ### [FAIL] API Documentation (0/3)
 
@@ -56,29 +52,25 @@ _DORA 2025 - AI-accessible documentation_
 **Remediation**: Add doc generation to CI (cargo doc, typedoc, sphinx) or maintain OpenAPI/Swagger specs.
 
 
-## Mechanical Constraints (27%)
+## Mechanical Constraints (86%)
 
 ### [PASS] CI Pipeline (3/3)
 
 _DORA 2025 Report_
 
-**Evidence**: CI detected: github
+**Evidence**: CI detected: github, github, github
 
-### [FAIL] Linter Enforcement (0/4)
-
-_OpenAI Harness Engineering - mechanical constraints_
-
-**Evidence**: No linter found in CI
-
-**Remediation**: Add a linter to CI that blocks merges on violations (e.g. cargo clippy -- -D warnings, eslint --max-warnings 0).
-
-### [FAIL] Formatter Enforcement (0/3)
+### [PASS] Linter Enforcement (4/4)
 
 _OpenAI Harness Engineering - mechanical constraints_
 
-**Evidence**: No formatter check found in CI
+**Evidence**: Blocking linter found in CI: eslint
 
-**Remediation**: Add a formatter check to CI (e.g. cargo fmt --all -- --check, prettier --check).
+### [PASS] Formatter Enforcement (3/3)
+
+_OpenAI Harness Engineering - mechanical constraints_
+
+**Evidence**: Formatter check found in CI: prettier\s+--check
 
 ### [PASS] Type Safety (3/3)
 
@@ -86,21 +78,17 @@ _SlopCodeBench - preventing subtle type errors_
 
 **Evidence**: TypeScript strict mode enabled
 
-### [FAIL] Dependency Auditing (0/4)
+### [PASS] Dependency Auditing (4/4)
 
 _Blog: security infrastructure reliability_
 
-**Evidence**: No dependency auditing found
+**Evidence**: Blocking dependency audit in CI: npm\s+audit
 
-**Remediation**: Add cargo deny/audit, npm audit, pip-audit, or Snyk to CI as a blocking check.
-
-### [FAIL] Conventional Commits (0/2)
+### [PASS] Conventional Commits (2/2)
 
 _DORA 2025 - working in small batches_
 
-**Evidence**: No conventional commit enforcement found
-
-**Remediation**: Add commitlint or equivalent to CI to enforce consistent commit message format.
+**Evidence**: Conventional commit enforcement found in CI
 
 ### [FAIL] Unsafe Code Policy (0/3)
 
@@ -111,31 +99,25 @@ _Blog: 80% problem in AI-generated code_
 **Remediation**: Add unsafe_code = forbid (Rust), security linting (semgrep/bandit), or ESLint rules against dangerous patterns.
 
 
-## Testing & Stability (6%)
+## Testing & Stability (48%)
 
-### [PASS] Test Suite (2/3)
+### [PASS] Test Suite (3/3)
 
 _Kent Beck - tests define what correct means_
 
-**Evidence**: Tests found but not confirmed in CI
+**Evidence**: Tests present and executed in CI
 
-**Remediation**: Add test execution to your CI pipeline.
-
-### [FAIL] Feature Matrix Testing (0/3)
+### [PASS] Feature Matrix Testing (3/3)
 
 _DORA 2025 - stability through comprehensive testing_
 
-**Evidence**: Only one test configuration found
+**Evidence**: Multiple test jobs in CI: lint, format, test
 
-**Remediation**: Add CI jobs for different feature flags, environments, or dependency versions (e.g. --all-features, --no-default-features, MSRV check).
-
-### [FAIL] Code Coverage (0/4)
+### [PASS] Code Coverage (4/4)
 
 _DORA 2025 - stability feedback loops_
 
-**Evidence**: No code coverage measurement found
-
-**Remediation**: Add cargo llvm-cov, pytest-cov, istanbul/c8, or equivalent to CI. Even informational coverage provides a feedback loop.
+**Evidence**: Coverage measurement in CI: coverage\.py|pytest-cov|--cov
 
 ### [FAIL] Mutation Testing (0/4)
 
@@ -169,24 +151,20 @@ _OpenAI Harness Engineering - mechanical constraints_
 
 **Remediation**: Add contract tests that verify external interface stability (golden fixtures, snapshot tests, wire-format checks).
 
-### [FAIL] Tests Block Merge (0/2)
+### [PASS] Tests Block Merge (2/2)
 
 _DORA 2025 - stability metrics_
 
-**Evidence**: No test jobs found in CI
-
-**Remediation**: Add test execution to CI as a blocking job.
+**Evidence**: All test jobs are blocking: lint, format, test
 
 
-## Review & Drift Prevention (20%)
+## Review & Drift Prevention (60%)
 
-### [FAIL] Code Review Required (0/4)
+### [PASS] Code Review Required (4/4)
 
 _OpenAI Harness Engineering - author/reviewer separation_
 
-**Evidence**: Cannot verify branch protection without API access. Run with --github-token or --gitlab-token for full assessment.
-
-**Remediation**: Enable required reviews in branch protection settings and add CODEOWNERS.
+**Evidence**: CODEOWNERS file found: .github/CODEOWNERS
 
 ### [PASS] Scheduled CI Jobs (3/3)
 
@@ -202,13 +180,11 @@ _OpenAI Harness Engineering - quality drift_
 
 **Remediation**: Add TODO/FIXME scanning, link checking (lychee), or prose linting (vale) to CI.
 
-### [FAIL] PR/MR Template (0/2)
+### [PASS] PR/MR Template (2/2)
 
 _DORA 2025 - working in small batches_
 
-**Evidence**: No PR/MR template found
-
-**Remediation**: Add .github/PULL_REQUEST_TEMPLATE.md or .gitlab/merge_request_templates/Default.md with sections for description, testing, and impact.
+**Evidence**: PR/MR template found: .github/PULL_REQUEST_TEMPLATE.md
 
 ### [FAIL] Automated Code Review (0/2)
 
@@ -227,7 +203,7 @@ _OpenAI Harness Engineering - curated knowledge base_
 **Remediation**: Add CI jobs that verify related docs stay in sync (e.g. diff AGENTS.md CLAUDE.md, golden fixture checks).
 
 
-## AI-Specific Safeguards (27%)
+## AI-Specific Safeguards (100%)
 
 ### [PASS] AI Usage Norms (4/4)
 
@@ -235,37 +211,29 @@ _DORA 2025 - clear organizational stance on AI use_
 
 **Evidence**: AI usage norms found in CLAUDE.md
 
-### [FAIL] Small Batch Enforcement (0/3)
+### [PASS] Small Batch Enforcement (3/3)
 
 _DORA 2025 - working in small batches_
 
-**Evidence**: No small batch enforcement found
+**Evidence**: PR size check tool found in CI
 
-**Remediation**: Add PR size checks (Danger, pr-size-labeler) or document size guidelines in CONTRIBUTING.md. Large AI-generated PRs are harder to review.
-
-### [FAIL] Design-Before-Code Culture (0/3)
+### [PASS] Design-Before-Code Culture (3/3)
 
 _Blog: cognitive offloading guardrails_
 
-**Evidence**: No design-before-code process found
+**Evidence**: RFC/design document directory found: docs/rfcs
 
-**Remediation**: Create docs/rfcs/ or docs/designs/ directory. Document a process where significant changes start with a design doc or plan before implementation.
-
-### [FAIL] Error Handling Policy (0/3)
+### [PASS] Error Handling Policy (3/3)
 
 _Blog: AI agents deleting tests, using expect()_
 
-**Evidence**: No error handling policy found
+**Evidence**: Error handling ESLint rules configured
 
-**Remediation**: Add clippy lints (unwrap_used, expect_used) for Rust, ESLint rules for JS/TS, or document error handling patterns in agent instructions.
-
-### [FAIL] Security-Critical Path Marking (0/2)
+### [PASS] Security-Critical Path Marking (2/2)
 
 _Blog: 80% problem in security infrastructure_
 
-**Evidence**: No security-critical path marking found
-
-**Remediation**: Add CODEOWNERS for sensitive directories, SECURITY.md for vuln reporting, or SAST scanning in CI.
+**Evidence**: CODEOWNERS found: .github/CODEOWNERS
 
 
 ## References
