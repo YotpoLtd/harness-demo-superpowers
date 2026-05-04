@@ -11,8 +11,7 @@
 
 ## Next Steps
 
-- [ ] Try guided demo: "Implement the spec at specs/add-delete-endpoint.md"
-- [ ] Try full pipeline: "Add a PATCH /todos/:id endpoint"
+- [ ] Try the full pipeline: describe intent (e.g. "Add a DELETE /todos/:id endpoint"), review the generated spec, approve, then let the harness execute
 
 ## Known Issues
 

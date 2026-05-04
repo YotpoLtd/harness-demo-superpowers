@@ -15,13 +15,16 @@ The app is intentionally trivial — the value is in the orchestration layer aro
 
 ALL implementation requests follow this pipeline — no exceptions, no shortcuts:
 
-1. Invoke `superpowers:brainstorming` — explore intent, clarify, produce spec
-2. Invoke `superpowers:writing-plans` — create plan from spec, get approval
-3. On plan approval -> invoke `superpowers:subagent-driven-development` — execute all tasks with gen-eval loop
-4. On completion -> invoke `superpowers:finishing-a-development-branch` — handle git
-5. After finishing -> Stop hook fires test-gate and report generation
+1. Receive intent from the developer — a short description of what they want built
+2. Invoke `superpowers:brainstorming` — explore intent, clarify, produce spec saved to `docs/superpowers/specs/`
+3. **PAUSE — developer reviews and approves the spec before proceeding**
+4. On spec approval -> invoke `superpowers:writing-plans` — create plan from spec, get approval
+5. On plan approval -> invoke `superpowers:subagent-driven-development` — execute all tasks with gen-eval loop
+6. On completion -> invoke `superpowers:finishing-a-development-branch` — handle git
+7. After finishing -> Stop hook fires test-gate and report generation
 
-"Approved" or "Go" on the plan means: execute ALL tasks without pausing between them.
+"Approved" or "Go" applies at two gates: spec approval (step 3) and plan approval (step 5).
+On approval, execute ALL subsequent tasks without pausing.
 The only mid-execution pause is if a subagent has a blocking question.
 
 ## Gen-Eval Loop
@@ -63,12 +66,10 @@ All hooks in `.claude/hooks/` fire automatically via `.claude/settings.json`:
 The Superpowers skill chain produces artifacts at each stage:
 
 1. **Brainstorming** produces a spec -> `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-2. **Writing Plans** reads the spec, produces a plan -> `docs/superpowers/plans/YYYY-MM-DD-<topic>.md`
-3. **SDD** executes the plan task by task with the gen-eval loop
-4. **Finishing** handles git operations
-
-Spec template (OpenSpec-inspired): `specs/TEMPLATE.md`
-Pre-written specs for guided demo (shortcutting brainstorming): `specs/`
+2. **Developer reviews and approves the spec**
+3. **Writing Plans** reads the approved spec, produces a plan -> `docs/superpowers/plans/YYYY-MM-DD-<topic>.md`
+4. **SDD** executes the plan task by task with the gen-eval loop
+5. **Finishing** handles git operations
 
 ## CI
 

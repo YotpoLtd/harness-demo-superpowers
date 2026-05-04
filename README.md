@@ -23,35 +23,24 @@ npm test  # Verify everything works
 
 ## Try It
 
-### Path 1: Guided Demo (Skip Brainstorming)
+### Try the Full Pipeline
 
-Open Claude Code in this repo and run:
+Open Claude Code in this repo and describe what you want built, e.g.:
 
 ```
-Implement the spec at specs/add-delete-endpoint.md
+Add a DELETE /todos/:id endpoint
 ```
 
-This enters the pipeline at **writing-plans** (skipping brainstorming since the spec already exists), then:
-- Creates a bite-sized implementation plan
-- On your approval, runs **subagent-driven-development** (the gen-eval loop)
-- Each task: implementer -> spec-reviewer -> code-quality-reviewer -> iterate until approved
-- Finishes with **finishing-a-development-branch** (git operations)
-- **Stop hooks fire:** test-gate verifies all tests pass, report generates session summary
+This runs the full pipeline:
+1. **Brainstorming** — clarifies requirements, produces a design spec in `docs/superpowers/specs/`
+2. **You review and approve the spec**
+3. **Writing Plans** — creates an implementation plan from the approved spec
+4. **You approve the plan**
+5. **Subagent-Driven Development** — executes with the gen-eval loop
+6. **Finishing** — git operations
+7. **Stop hooks fire** — test-gate verifies all tests pass, report generates session summary
 
 After the session, inspect `reports/` to see the full audit trail.
-
-### Path 2: Full Pipeline (From Scratch)
-
-```
-Add a PATCH /todos/:id endpoint that updates a todo's title and completed status
-```
-
-This enters the full pipeline:
-1. **Brainstorming** — clarifies requirements, produces a design spec
-2. **Writing Plans** — creates implementation plan from the spec
-3. **Subagent-Driven Development** — executes with gen-eval loop
-4. **Finishing** — git operations
-5. **Stop hooks** — test-gate + report generation
 
 ## What's in the Harness
 
