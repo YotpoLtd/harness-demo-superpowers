@@ -17,7 +17,14 @@ test.describe("Todo App", () => {
       return;
     }
     for (const todo of todoList) {
-      await request.delete(`/todos/${todo.id}`);
+      if (typeof todo !== "object" || todo === null) {
+        continue;
+      }
+      const id = "id" in todo ? (todo as { id: unknown }).id : undefined;
+      if (typeof id !== "string") {
+        continue;
+      }
+      await request.delete(`/todos/${id}`);
     }
     await page.goto("/");
   });
