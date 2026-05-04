@@ -135,3 +135,158 @@ describe("DELETE /todos/:id", () => {
     expect(list.body[0].title).toBe("Keep this");
   });
 });
+
+describe("PATCH /todos/:id", () => {
+  it("updates title only", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Original title" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({ title: "Updated title" })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      id: created.body.id,
+      title: "Updated title",
+      completed: false,
+    });
+  });
+
+  it("updates completed only", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({ completed: true })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      id: created.body.id,
+      title: "Task",
+      completed: true,
+    });
+  });
+
+  it("updates both title and completed", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Old title" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({ title: "New title", completed: true })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      id: created.body.id,
+      title: "New title",
+      completed: true,
+    });
+  });
+
+  it("accepts empty payload and returns unchanged todo", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({})
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(created.body);
+  });
+
+  it("returns 400 when title is empty string", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({ title: "" })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "title is required" });
+  });
+
+  it("returns 400 when title is not a string", async () => {
+    const app = createApp();
+
+    const created = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task" })
+      .set("Content-Type", "application/json");
+
+    const response = await supertest(app)
+      .patch(`/todos/${created.body.id}`)
+      .send({ title: 123 })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "title is required" });
+  });
+
+  it("returns 404 when todo not found", async () => {
+    const app = createApp();
+
+    const response = await supertest(app)
+      .patch("/todos/non-existent-id")
+      .send({ title: "New title" })
+      .set("Content-Type", "application/json");
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "Todo not found" });
+  });
+
+  it("does not affect other todos", async () => {
+    const app = createApp();
+
+    const first = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task 1" })
+      .set("Content-Type", "application/json");
+
+    const second = await supertest(app)
+      .post("/todos")
+      .send({ title: "Task 2" })
+      .set("Content-Type", "application/json");
+
+    await supertest(app)
+      .patch(`/todos/${first.body.id}`)
+      .send({ title: "Task 1 updated" })
+      .set("Content-Type", "application/json");
+
+    const list = await supertest(app).get("/todos");
+
+    expect(list.status).toBe(200);
+    expect(list.body).toHaveLength(2);
+    expect(
+      list.body.find((t: Record<string, unknown>) => t.id === second.body.id)
+    ).toEqual(second.body);
+  });
+});
