@@ -95,11 +95,13 @@
         if (!response.ok) {
           const data = await response.json();
           showError(data.error || 'Failed to add todo');
-          return;
+          return false;
         }
         await loadTodos();
+        return true;
       } catch (err) {
         showError('Failed to add todo');
+        return false;
       }
     }
 
@@ -117,14 +119,16 @@
       }
     }
 
-    todoForm.addEventListener('submit', function(e) {
+    todoForm.addEventListener('submit', async function(e) {
       e.preventDefault();
       const title = todoInput.value.trim();
       if (title.length === 0) {
         return;
       }
-      addTodo(title);
-      todoInput.value = '';
+      const ok = await addTodo(title);
+      if (ok) {
+        todoInput.value = '';
+      }
     });
 
     document.addEventListener('DOMContentLoaded', loadTodos);
