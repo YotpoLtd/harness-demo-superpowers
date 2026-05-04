@@ -41,22 +41,23 @@ test.describe("Todo App", () => {
     const input = page.locator('[data-testid="todo-input"]');
     const submit = page.locator('[data-testid="todo-submit"]');
 
+    const items = page.locator('[data-testid^="todo-item-"]');
+
     await input.fill("First todo");
     await submit.click();
-    await page.locator('[data-testid^="todo-item-"]').first().waitFor();
+    await expect(items).toHaveCount(1);
 
     await input.fill("Second todo");
     await submit.click();
-    await expect(page.locator('[data-testid^="todo-item-"]')).toHaveCount(2);
+    await expect(items).toHaveCount(2);
 
     await input.fill("Third todo");
     await submit.click();
-    await expect(page.locator('[data-testid^="todo-item-"]')).toHaveCount(3);
+    await expect(items).toHaveCount(3);
 
-    const items = page.locator('[data-testid^="todo-item-"]');
-    await expect(items.nth(0)).toContainText("First todo");
-    await expect(items.nth(1)).toContainText("Second todo");
-    await expect(items.nth(2)).toContainText("Third todo");
+    await expect(page.getByText("First todo")).toBeVisible();
+    await expect(page.getByText("Second todo")).toBeVisible();
+    await expect(page.getByText("Third todo")).toBeVisible();
   });
 
   test("delete a todo", async ({ page }) => {

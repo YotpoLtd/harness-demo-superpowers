@@ -71,6 +71,7 @@
     }
 
     async function loadTodos() {
+      hideError();
       try {
         const response = await fetch('/todos');
         if (!response.ok) {
