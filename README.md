@@ -28,7 +28,7 @@ npm test  # Verify everything works
 Open Claude Code in this repo and describe what you want built, e.g.:
 
 ```
-Add a DELETE /todos/:id endpoint
+Add a PATCH /todos/:id endpoint to update a todo
 ```
 
 This runs the full pipeline:
