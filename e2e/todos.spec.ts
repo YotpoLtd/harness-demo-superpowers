@@ -4,9 +4,11 @@ test.describe("Todo App", () => {
   test.beforeEach(async ({ page, request }) => {
     // Clear all todos before each test to ensure isolation
     const todos = await request.get("/todos");
+    expect(todos.ok()).toBeTruthy();
     const todoList = await todos.json();
     for (const todo of todoList) {
-      await request.delete(`/todos/${todo.id}`);
+      const deleted = await request.delete(`/todos/${todo.id}`);
+      expect(deleted.ok()).toBeTruthy();
     }
     await page.goto("/");
   });
@@ -97,5 +99,8 @@ test.describe("Todo App", () => {
 
     const todoItems = page.locator('[data-testid^="todo-item-"]');
     await expect(todoItems).toHaveCount(0);
+
+    const emptyState = page.locator('[data-testid="todo-empty"]');
+    await expect(emptyState).toBeVisible();
   });
 });
