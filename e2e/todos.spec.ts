@@ -2,21 +2,19 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Todo App", () => {
   test.beforeEach(async ({ page, request }) => {
-    // Clear all todos before each test to ensure isolation
+    // Clear all todos before each test — fail if cleanup cannot complete (shared dev server state).
     const todos = await request.get("/todos");
-    if (!todos.ok()) {
-      return;
-    }
+    expect(todos.ok(), `GET /todos failed with status ${todos.status()}`).toBeTruthy();
+
     let todoList: unknown;
     try {
       todoList = await todos.json();
-    } catch {
-      return;
+    } catch (err) {
+      throw new Error(`GET /todos returned invalid JSON: ${String(err)}`);
     }
-    if (!Array.isArray(todoList)) {
-      return;
-    }
-    for (const todo of todoList) {
+    expect(Array.isArray(todoList), "GET /todos must return a JSON array").toBeTruthy();
+
+    for (const todo of todoList as unknown[]) {
       if (typeof todo !== "object" || todo === null) {
         continue;
       }
@@ -24,8 +22,19 @@ test.describe("Todo App", () => {
       if (typeof id !== "string") {
         continue;
       }
-      await request.delete(`/todos/${id}`);
+      const del = await request.delete(`/todos/${id}`);
+      expect(
+        del.ok(),
+        `DELETE /todos/${id} failed with status ${del.status()}`,
+      ).toBeTruthy();
     }
+
+    const verify = await request.get("/todos");
+    expect(verify.ok(), `Verify GET /todos failed with status ${verify.status()}`).toBeTruthy();
+    const remaining = await verify.json();
+    expect(Array.isArray(remaining), "Verify GET /todos must return a JSON array").toBeTruthy();
+    expect((remaining as unknown[]).length).toBe(0);
+
     await page.goto("/");
   });
 
