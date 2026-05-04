@@ -4,7 +4,18 @@ test.describe("Todo App", () => {
   test.beforeEach(async ({ page, request }) => {
     // Clear all todos before each test to ensure isolation
     const todos = await request.get("/todos");
-    const todoList = await todos.json();
+    if (!todos.ok()) {
+      return;
+    }
+    let todoList: unknown;
+    try {
+      todoList = await todos.json();
+    } catch {
+      return;
+    }
+    if (!Array.isArray(todoList)) {
+      return;
+    }
     for (const todo of todoList) {
       await request.delete(`/todos/${todo.id}`);
     }

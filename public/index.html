@@ -93,8 +93,16 @@
           body: JSON.stringify({ title: title }),
         });
         if (!response.ok) {
-          const data = await response.json();
-          showError(data.error || 'Failed to add todo');
+          let errMsg = 'Failed to add todo';
+          try {
+            const data = await response.json();
+            if (data && data.error) {
+              errMsg = data.error;
+            }
+          } catch {
+            /* non-JSON error body */
+          }
+          showError(errMsg);
           return;
         }
         await loadTodos();
