@@ -4,8 +4,130 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    h1 { margin-bottom: 24px; }
+    form { display: flex; gap: 8px; margin-bottom: 24px; }
+    input[type="text"] { flex: 1; padding: 8px 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 16px; font-size: 16px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; }
+    button:hover { background: #e5e5e5; }
+    ul { list-style: none; }
+    li { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+    li span { flex: 1; }
+    li button { padding: 4px 12px; font-size: 14px; color: #c00; border-color: #c00; background: transparent; }
+    li button:hover { background: #fee; }
+    .empty { color: #888; font-style: italic; padding: 12px 0; }
+    .error { color: #c00; margin-bottom: 16px; padding: 8px 12px; background: #fee; border-radius: 4px; display: none; }
+  </style>
 </head>
 <body>
   <h1>Todo App</h1>
+  <div data-testid="todo-error" class="error"></div>
+  <form data-testid="todo-form">
+    <input type="text" data-testid="todo-input" placeholder="What needs to be done?" />
+    <button type="submit" data-testid="todo-submit">Add</button>
+  </form>
+  <ul data-testid="todo-list"></ul>
+  <p data-testid="todo-empty" class="empty">No todos yet</p>
+
+  <script>
+    const todoList = document.querySelector('[data-testid="todo-list"]');
+    const todoEmpty = document.querySelector('[data-testid="todo-empty"]');
+    const todoError = document.querySelector('[data-testid="todo-error"]');
+    const todoForm = document.querySelector('[data-testid="todo-form"]');
+    const todoInput = document.querySelector('[data-testid="todo-input"]');
+
+    function showError(message) {
+      todoError.textContent = message;
+      todoError.style.display = 'block';
+    }
+
+    function hideError() {
+      todoError.textContent = '';
+      todoError.style.display = 'none';
+    }
+
+    function renderTodos(todos) {
+      todoList.innerHTML = '';
+      if (todos.length === 0) {
+        todoEmpty.style.display = 'block';
+        return;
+      }
+      todoEmpty.style.display = 'none';
+      todos.forEach(function(todo) {
+        const li = document.createElement('li');
+        li.setAttribute('data-testid', 'todo-item-' + todo.id);
+        const span = document.createElement('span');
+        span.textContent = todo.title;
+        const btn = document.createElement('button');
+        btn.setAttribute('data-testid', 'todo-delete-' + todo.id);
+        btn.textContent = 'Delete';
+        btn.addEventListener('click', function() { deleteTodo(todo.id); });
+        li.appendChild(span);
+        li.appendChild(btn);
+        todoList.appendChild(li);
+      });
+    }
+
+    async function loadTodos() {
+      try {
+        const response = await fetch('/todos');
+        if (!response.ok) {
+          showError('Failed to load todos');
+          return;
+        }
+        const todos = await response.json();
+        renderTodos(todos);
+      } catch (err) {
+        showError('Failed to load todos');
+      }
+    }
+
+    async function addTodo(title) {
+      hideError();
+      try {
+        const response = await fetch('/todos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title }),
+        });
+        if (!response.ok) {
+          const data = await response.json();
+          showError(data.error || 'Failed to add todo');
+          return;
+        }
+        await loadTodos();
+      } catch (err) {
+        showError('Failed to add todo');
+      }
+    }
+
+    async function deleteTodo(id) {
+      hideError();
+      try {
+        const response = await fetch('/todos/' + id, { method: 'DELETE' });
+        if (!response.ok) {
+          showError('Failed to delete todo');
+          return;
+        }
+        await loadTodos();
+      } catch (err) {
+        showError('Failed to delete todo');
+      }
+    }
+
+    todoForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const title = todoInput.value.trim();
+      if (title.length === 0) {
+        return;
+      }
+      addTodo(title);
+      todoInput.value = '';
+    });
+
+    document.addEventListener('DOMContentLoaded', loadTodos);
+  </script>
 </body>
 </html>
