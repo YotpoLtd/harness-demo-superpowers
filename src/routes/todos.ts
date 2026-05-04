@@ -1,6 +1,13 @@
 import { Router } from "express";
 import type { Todo } from "../types.js";
 
+function validateTitle(input?: unknown): { valid: boolean; error?: string } {
+  if (!input || typeof input !== "string" || input.trim().length === 0) {
+    return { valid: false, error: "title is required" };
+  }
+  return { valid: true };
+}
+
 export function createTodoRouter(): {
   router: Router;
   getTodos: () => readonly Todo[];
@@ -16,8 +23,9 @@ export function createTodoRouter(): {
   router.post("/", (req, res): void => {
     const { title } = req.body as { title?: string };
 
-    if (!title || typeof title !== "string" || title.trim().length === 0) {
-      res.status(400).json({ error: "title is required" });
+    const titleValidation = validateTitle(title);
+    if (!titleValidation.valid) {
+      res.status(400).json({ error: titleValidation.error });
       return;
     }
 
