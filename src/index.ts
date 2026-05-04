@@ -1,9 +1,11 @@
+import path from "node:path";
 import express, { type Express } from "express";
 import { createTodoRouter } from "./routes/todos.js";
 
 export function createApp(): Express {
   const app = express();
   app.use(express.json());
+  app.use(express.static(path.join(import.meta.dirname, "..", "public")));
 
   const { router } = createTodoRouter();
   app.use("/todos", router);
