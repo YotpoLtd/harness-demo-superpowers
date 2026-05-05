@@ -22,4 +22,12 @@ for pattern in "${DANGEROUS_PATTERNS[@]}"; do
   fi
 done
 
+COMMAND=$(echo "$HOOK_DATA" | jq -r '.tool_input.command // empty')
+if echo "$COMMAND" | grep -qE 'git push[^|;]*\b(main|master)\b'; then
+  cat <<'EOF'
+{"decision":"block","reason":"Direct push to main/master is blocked. Use a feature branch and create a PR instead."}
+EOF
+  exit 2
+fi
+
 exit 0

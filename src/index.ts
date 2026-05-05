@@ -1,9 +1,11 @@
+import path from "node:path";
 import express, { type Express } from "express";
 import { createTodoRouter } from "./routes/todos.js";
 
 export function createApp(): Express {
   const app = express();
   app.use(express.json());
+  app.use(express.static(path.join(import.meta.dirname, "..", "public")));
 
   const { router } = createTodoRouter();
   app.use("/todos", router);
@@ -21,8 +23,7 @@ function startServer(): void {
 }
 
 const isDirectRun = Boolean(
-  process.argv[1] &&
-    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))
+  process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/")),
 );
 
 if (isDirectRun) {
