@@ -9,9 +9,15 @@ The application is intentionally trivial — the harness around it is the point.
 
 ```
 src/
-├── index.ts          # App factory + server bootstrap
+├── index.ts          # App factory + server bootstrap (serves static + API)
 ├── routes/todos.ts   # Todo CRUD handlers (owns todo state)
 └── types.ts          # Shared type definitions (no logic)
+
+public/
+└── index.html        # Static todo UI (vanilla HTML/CSS/JS, no framework)
+
+e2e/
+└── todos.spec.ts     # Playwright E2E tests against running server
 ```
 
 ### Dependency Rules
@@ -34,11 +40,13 @@ These constraints define what must NOT happen — violations break module isolat
 ### Data Flow
 
 ```
-Client Request
-    → Express middleware (JSON parsing)
+Browser (public/index.html)
+    → fetch("/todos", ...)
+    → Express middleware (JSON parsing, static serving)
     → Router (routes/todos.ts)
     → In-memory array (immutable updates)
     → JSON response
+    → UI re-renders
 ```
 
 ### Storage
@@ -49,10 +57,17 @@ The todo array is owned by `createTodoRouter()` — it is not a global. Each cal
 
 ### Testing Strategy
 
-- Supertest for HTTP-level integration tests
-- Each test creates its own app instance via `createApp()` — full isolation
-- Vitest with JSON reporter for machine-readable output
-- No mocks — the app is simple enough to test end-to-end
+Two layers:
+
+| Layer | Tool | Runs against | Purpose |
+|-------|------|-------------|---------|
+| Unit/Integration | Vitest + Supertest | In-memory app (`createApp()`) | Fast, isolated API logic tests |
+| E2E | Playwright | Real server (`npm run dev`) | Full browser UI flows with video recording |
+
+- Each Vitest test creates its own app instance — full isolation, no shared state
+- Playwright tests launch the dev server, open Chromium, interact with the UI
+- Video recordings saved to `test-results/` for debugging and demo purposes
+- Both suites must pass before PR creation (enforced by test-gate hook + CI)
 
 ### Extension Points
 
@@ -62,3 +77,8 @@ When adding new endpoints:
 3. Mount in `index.ts`
 4. Add types in `types.ts`
 5. Add tests in `tests/`
+
+When adding UI features:
+1. Update `public/index.html` — add elements with `data-testid` attributes
+2. Add Playwright E2E tests in `e2e/` covering the new interactions
+3. Run `npm run test:e2e` to verify
