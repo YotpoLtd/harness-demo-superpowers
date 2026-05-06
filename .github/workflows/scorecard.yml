@@ -11,16 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
       - uses: markmishaev76/ai-harness-scorecard@v1
         id: scorecard
 
-      - name: Commit badge and report
+      - name: Commit badge and report via PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add scorecard-badge.json scorecard-report.md
-          git diff --cached --quiet || git commit -m "chore: update scorecard"
-          git push
+          if git diff --cached --quiet; then
+            echo "No scorecard changes to commit"
+            exit 0
+          fi
+          BRANCH="chore/update-scorecard-$(date +%s)"
+          git checkout -b "$BRANCH"
+          git commit -m "chore: update scorecard"
+          git push origin "$BRANCH"
+          gh pr create --title "chore: update scorecard" --body "Automated scorecard update" --base main --head "$BRANCH"
+          gh pr merge "$BRANCH" --auto --squash
