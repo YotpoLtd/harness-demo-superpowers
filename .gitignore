@@ -2,6 +2,7 @@ node_modules/
 dist/
 reports/
 coverage/
+test-results/
 *.tsbuildinfo
 .DS_Store
 .claude/worktrees/

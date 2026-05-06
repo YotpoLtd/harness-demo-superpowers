@@ -6,10 +6,21 @@ The app is intentionally trivial — the value is in the orchestration layer aro
 ## Quick Reference
 
 - **Build:** `npm run build`
-- **Test:** `npm test`
+- **Test (unit/integration):** `npm test`
 - **Test (JSON):** `npm run test:json`
+- **Test (E2E):** `npm run test:e2e`
+- **Test (E2E, visible browser):** `npm run test:e2e:headed`
 - **Lint:** `npm run lint`
 - **Dev server:** `npm run dev`
+
+## Testing Gates
+
+Both test suites MUST pass before a branch is considered complete or a PR is created:
+
+1. `npm test` — unit/integration tests (Vitest + Supertest, in-memory app)
+2. `npm run test:e2e` — end-to-end tests (Playwright against running server with video recording)
+
+The `test-gate.sh` Stop hook enforces both gates mechanically. CI enforces them on the PR.
 
 ## Workflow
 
@@ -58,7 +69,7 @@ All hooks in `.claude/hooks/` fire automatically via `.claude/settings.json`:
 - **lint-gate.sh** — PostToolUse on Write|Edit: ESLint -> `reports/lint-errors.json`
 - **subagent-capture.sh** — PostToolUse on Agent: saves output -> `reports/reviews/`
 - **audit-log.sh** — PostToolUse on all: appends to `reports/audit.jsonl`
-- **test-gate.sh** — Stop: Vitest -> `reports/test-results.json`, blocks on failure
+- **test-gate.sh** — Stop: Vitest + Playwright E2E -> `reports/test-results.json`, blocks on failure
 - **report.sh** — Stop: generates `reports/session-report.md`
 
 ## Specs and Plans (The Lifecycle)
@@ -77,6 +88,7 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) enforces on every push and 
 - ESLint (same rules as lint-gate hook)
 - Prettier format check
 - Vitest with coverage
+- Playwright E2E tests
 - npm audit
 - commitlint (conventional commits)
 
