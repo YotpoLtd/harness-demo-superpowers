@@ -94,10 +94,6 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) enforces on every push and 
 
 CI is the second enforcement gate — hooks catch issues during agent work, CI catches everything else.
 
-## Scorecard
-
-The AI Harness Scorecard runs via GitHub Actions on every push to main (`.github/workflows/scorecard.yml`).
-It grades the repo on 31 deterministic checks — no LLM dependency. See ADR-004 for details.
 
 ## ADRs
 
@@ -105,4 +101,3 @@ Architecture Decision Records in `docs/adr/`. Read these before proposing change
 - Storage mechanism (ADR-001)
 - Framework choice (ADR-002)
 - Testing/reporting approach (ADR-003)
-- Harness scorecard (ADR-004)
