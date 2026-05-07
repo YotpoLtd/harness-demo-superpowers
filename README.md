@@ -1,7 +1,5 @@
 # Harness Demo — Superpowers Edition
 
-![AI Harness Score](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/YotpoLtd/harness-demo-superpowers/main/scorecard-badge.json)
-
 A minimal TypeScript API wrapped in a full harness built on **Superpowers skills + Claude Code hooks**. The app is intentionally trivial — the value is in the orchestration layer around it demonstrating every concept from Harness Engineering.
 
 **The app is not the point. The harness is the point.**
@@ -49,7 +47,7 @@ After the session, inspect `reports/` to see the full audit trail.
 | Hook | Event | What It Does |
 |------|-------|-------------|
 | `permission-guard.sh` | PreToolUse (Bash) | Blocks `--force`, `--no-verify`, `rm -rf` |
-| `lint-gate.sh` | PostToolUse (Write\|Edit) | ESLint -> JSON, blocks on errors |
+| `lint-gate.sh` | PostToolUse (Write\|Edit) |
 | `subagent-capture.sh` | PostToolUse (Agent) | Saves subagent output to `reports/reviews/` |
 | `audit-log.sh` | PostToolUse (*) | Logs all tool calls to `reports/audit.jsonl` |
 | `test-gate.sh` | Stop | Vitest -> JSON, blocks on failures |
@@ -57,7 +55,7 @@ After the session, inspect `reports/` to see the full audit trail.
 
 ### CI Enforcement (GitHub Actions)
 
-| Job | What It Checks | Scorecard Category |
+| Job | What It Checks |
 |-----|---------------|-------------------|
 | `lint` | ESLint strict TypeScript rules | Mechanical Constraints |
 | `format` | Prettier formatting consistency | Mechanical Constraints |
@@ -105,20 +103,6 @@ reports/
     ├── 2026-04-27T10-30-00-spec-review-task1.md
     └── ...
 ```
-
-## Scorecard
-
-The [AI Harness Scorecard](https://github.com/markmishaev76/ai-harness-scorecard) runs on every push to main via GitHub Actions. It grades the repo across 31 deterministic checks in 5 categories:
-
-| Category | Weight |
-|----------|--------|
-| Architectural Documentation | 20% |
-| Mechanical Constraints | 25% |
-| Testing & Stability | 25% |
-| Review & Drift Prevention | 15% |
-| AI-Specific Safeguards | 15% |
-
-Results are committed as `scorecard-badge.json` and `scorecard-report.md` at the repo root. See [ADR-004](docs/adr/004-harness-scorecard.md) for the decision rationale.
 
 ## What This Proves
 
